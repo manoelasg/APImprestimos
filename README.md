@@ -1,5 +1,6 @@
 # APImprestimos
 Exercício Mastertech: Sistema back-end de empréstimos P2P disponibilizado através de API
+
 Grupo: Alex Monteiro, Felipe Sardim e Manoela Silverio
 
 Funcionalidades do MVP:

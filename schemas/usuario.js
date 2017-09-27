@@ -13,6 +13,11 @@ const UsuarioSchema = mongoose.model('Usuario', {
         type: Number,
         required: false
     },
+    saldo: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     senha: {
         type: String,
         required: true

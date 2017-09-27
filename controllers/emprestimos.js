@@ -1,18 +1,16 @@
 const express = require('express');
-const UsuarioSchema = require('../schemas/usuario');
 const jwt = require('jsonwebtoken');
 const passwordHash = require('password-hash');
 const expressJwt = require('express-jwt');
+const EmprestimoSchema = require('../schemas/emprestimo');
+const segredo = "mcduck";
 
 let router = express.Router();
 
 router.get('/', (request, response) => {
-    console.log('get /usuario');
+    console.log('get /emprestimos');
+    response.sendStatus(200);
 });
 
-router.post('/cadastro', (request, response) => {
-    console.log('post  /usuario');
-    response.send(request.body)
-});
 
 module.exports = router;

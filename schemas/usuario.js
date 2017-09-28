@@ -19,8 +19,7 @@ const UsuarioSchema = mongoose.model('Usuario', {
     },
     senha: {
         type: String,
-        required: true,
-        select: false
+        required: true
     },
     data_nascimento: {
         type: Date,

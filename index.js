@@ -5,17 +5,22 @@ const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 const usuariosController = require('./controllers/usuarios');
-const emprestimosController = require('./controllers/emprestimos');
+const consultaController = require('./controllers/consulta');
+// const emprestimosController = require('./controllers/emprestimos');
 
+//gera aplicação
 const app = express();
 
+//middlewares
 app.use(bodyParser.json());
 app.use('/usuarios', usuariosController);
-app.use('/emprestimos', emprestimosController);
+app.use('/consulta', consultaController);
+// app.use('/emprestimos', emprestimosController);
 
+//conecta ao bd
 mongoose.connect('mongodb://localhost/apimprestimos');
 
-
+//servidor
 app.listen(3000, () => {
     console.log('Servidor inicializado');
 });

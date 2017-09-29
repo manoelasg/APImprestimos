@@ -13,8 +13,19 @@ router.get('/', (request, response) => {
 });
 router.post('/cadastro', (request, response) => {
     console.log('post /usuarios/cadastro');
-
     let usuario = new UsuarioSchema(request.body);
+    console.log(JSON.stringify(usuario));
+    
+    let dataAtual = new Date();
+    let dtNascimento = new Date(usuario.data_nascimento);
+    let idade = dataAtual.getFullYear() - dtNascimento.getFullYear();
+    let mes = dataAtual.getMonth() - dtNascimento.getMonth();
+    
+    if(idade < 18 || mes < 0 || (mes === 0 && dataAtual.getDate() < dtNascimento.getDate())){
+        response.status(403).send("Usuário menor de idade");
+        return;
+    }
+
     usuario.senha = passwordHash.generate(request.body.senha);
     usuario.save((error, resultado) => {
         if(error) {

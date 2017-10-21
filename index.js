@@ -15,12 +15,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use('/usuarios', usuariosController);
 app.use('/consulta', consultaController);
-// app.use('/emprestimos', emprestimosController);
 
 //conecta ao bd
 mongoose.connect('mongodb://localhost/apimprestimos');
 
 //servidor
 app.listen(3000, () => {
-    console.log('Servidor inicializado');
+    console.log('Servidor inicializado na porta 3000');
 });

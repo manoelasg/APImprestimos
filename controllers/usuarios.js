@@ -31,8 +31,12 @@ router.post('/cadastro', (request, response) => {
             response.status(500).send(error);
             return;
         }
-        usuario.senha = undefined;
-        response.status(201).send(resultado);
+        let usuarioResposta = {
+            nome: resultado.nome,
+            email: resultado.email,
+            saldo: resultado.saldo
+        };
+        response.status(201).send(usuarioResposta);
     });
 });
 router.post('/login', (request, response) => {
@@ -46,11 +50,13 @@ router.post('/login', (request, response) => {
             const token = jwt.sign({_id: usuario._id}, segredo);
             response.set('Authorization', token);
             // response.set('Role', "user");
+            
             let usuarioResposta = {
                 nome: usuario.nome,
                 email: usuario.email,
                 saldo: usuario.saldo
             };
+            
             response.status(200).send(usuarioResposta);
             return;
         }
@@ -86,9 +92,14 @@ router.post('/fazerparte', expressJwt({secret: segredo}), (request, response) =>
         usuario.saldo += valor;
         UsuarioSchema.findByIdAndUpdate(idUsuario, usuario, {new: true}, (error, resposta) => {
             if(error){response.sendStatus(500);return;}
-            resposta.senha = undefined;
-            resposta.data_nascimento = undefined;
-            response.status(200).send(resposta);
+            
+            let usuarioResposta = {
+                nome: resposta.nome,
+                email: resposta.email,
+                saldo: resposta.saldo
+            };            
+
+            response.status(200).send(usuarioResposta);
             return;
         });
     });

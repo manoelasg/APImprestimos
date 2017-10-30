@@ -18,7 +18,7 @@ router.get('/tomadores', (request, response) => {
     UsuarioSchema.find(query, (error, usuario) => {
         if(error) {response.status(404).send(error); return;}
         response.status(200).send(usuario);
-    }).select('-senha');
+    }).select('-senha -data_nascimento -_id -__v');
 });
 router.get('/credores', (request, response) => {
     console.log('get /consulta/credores');
@@ -28,14 +28,14 @@ router.get('/credores', (request, response) => {
     UsuarioSchema.find(query, (error, usuario) => {
         if(error) {response.status(404).send(error); return;}
         response.status(200).send(usuario);
-    }).select('-senha');
+    }).select('-senha -data_nascimento -_id -__v');
 });
 router.get('/todos', (request, response) => {
     console.log('get /consulta/todos');
     UsuarioSchema.find((error, usuario) => {
         if(error) {response.status(404).send(error); return;}
         response.status(200).send(usuario);
-    }).select('-senha');
+    }).select('-senha -data_nascimento -_id -__v');
 });
 
 module.exports = router;

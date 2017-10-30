@@ -14,7 +14,6 @@ router.get('/', (request, response) => {
 router.post('/cadastro', (request, response) => {
     console.log('post /usuarios/cadastro');
     let usuario = new UsuarioSchema(request.body);
-    console.log(JSON.stringify(usuario));
 
     let dataAtual = new Date();
     let dtNascimento = new Date(usuario.data_nascimento);
@@ -29,7 +28,7 @@ router.post('/cadastro', (request, response) => {
     usuario.senha = passwordHash.generate(request.body.senha);
     usuario.save((error, resultado) => {
         if(error) {
-            response.status(400).send(error);
+            response.status(500).send(error);
             return;
         }
         response.status(201).send(resultado);
@@ -41,10 +40,11 @@ router.post('/login', (request, response) => {
         email: request.body.email
     };
     UsuarioSchema.findOne(query, (error, usuario) => {
+        if(error){response.sendStatus(500); return;}
         if(usuario && passwordHash.verify(request.body.senha, usuario.senha)) {
             const token = jwt.sign({_id: usuario._id}, segredo);
             response.set('Authorization', token);
-            response.set('Role', "user");
+            // response.set('Role', "user");
             response.status(200).send(usuario);
             return;
         }
@@ -59,26 +59,28 @@ router.post('/fazerparte', expressJwt({secret: segredo}), (request, response) =>
         papel: request.body.papel
     };
 
-    if(isNaN(solicitacao.valor)){
-        response.sendStatus(400);
-        return;
-    }else if(solicitacao.valor <= 0){
+    //Consistência do valor digitado
+    if(isNaN(solicitacao.valor) || solicitacao.valor <= 0){
         response.status(400).send("Valor digitado é inválido");
         return;
     }
 
+    //Consistência do papel digitado
     let valor = 0;
-    if(solicitacao.papel === "tomador"){
+    if(solicitacao.papel.toLowerCase() !== "tomador" && solicitacao.papel.toLowerCase() !== "credor"){
+        response.status(403).send("Papel digitado é inválido");
+        return;        
+    }else if(solicitacao.papel.toLowerCase() === "tomador")
         valor = -1 * solicitacao.valor;
-    }else{
+    else
         valor = solicitacao.valor;
-    }
+
     UsuarioSchema.findById(idUsuario, (error, usuario) =>{
-        if(error){response.sendStatus(400);return;}
+        if(error){response.sendStatus(500);return;}
         usuario.saldo += valor;
         console.log(usuario);
         UsuarioSchema.findByIdAndUpdate(idUsuario, usuario, {new: true}, (error, resposta) => {
-            if(error){response.sendStatus(401);return;}
+            if(error){response.sendStatus(500);return;}
             response.status(200).send(resposta);
             return;
         });
